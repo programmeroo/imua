@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="projects-page">
+    <header class="page-header">
+        <div class="page-header-left">
+            <h2>Projects</h2>
+            <span class="subtitle">Tasks, documents, knowledge and cron jobs, grouped by project</span>
+        </div>
+        <div class="page-header-right">
+            <span class="badge" id="projects-total">&nbsp;</span>
+            <button class="btn btn-primary" id="new-project-btn">New project</button>
+        </div>
+    </header>
+
+    <section class="panel project-form" id="new-project-form" hidden>
+        <form>
+            <label for="new-project-form-name">Name</label>
+            <input id="new-project-form-name" name="name" class="form-input" maxlength="128" required value="">
+            <label for="new-project-form-desc">Description</label>
+            <textarea id="new-project-form-desc" name="description" class="form-input" rows="3"></textarea>
+            <div class="project-form-error" role="alert" hidden></div>
+            <div class="project-form-actions">
+                <button type="submit" class="btn btn-primary">Create project</button>
+                <button type="button" class="btn" data-cancel>Cancel</button>
+            </div>
+        </form>
+    </section>
+
+    <div id="projects-grid" class="projects-grid">
+        <div class="placeholder projects-empty">Loading projects...</div>
+    </div>
+
+    <section id="archived-section" class="projects-archived" hidden>
+        <h3 class="projects-section-title">Archived</h3>
+        <div id="archived-grid" class="projects-grid"></div>
+    </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/project_form.js') }}"></script>
+<script src="{{ url_for('static', filename='js/projects.js') }}"></script>
+{% endblock %}

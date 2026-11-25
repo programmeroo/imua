@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="project-detail" data-slug="{{ project.slug }}" data-status="{{ project.status }}">
+    <a href="/projects" class="project-back">&larr; All projects</a>
+    <header class="page-header">
+        <div class="page-header-left">
+            <h2>{{ project.name }}</h2>
+            <span class="subtitle">{{ project.description or "No description" }}</span>
+        </div>
+        <div class="page-header-right">
+            <span class="project-slug">{{ project.slug }}</span>
+            <span class="status-badge status-{{ 'active' if project.status == 'active' else 'paused' }}">{{ project.status }}</span>
+            <button class="btn btn-sm" id="edit-project-btn">Edit</button>
+            <button class="btn btn-sm" id="archive-project-btn" data-status="{{ project.status }}">
+                {{ "Archive" if project.status == "active" else "Unarchive" }}</button>
+            <button class="btn btn-sm btn-danger" id="delete-project-btn">Delete</button>
+        </div>
+    </header>
+
+    <section class="panel project-form" id="edit-project-form" hidden>
+        <form>
+            <label for="edit-project-form-name">Name</label>
+            <input id="edit-project-form-name" name="name" class="form-input" maxlength="128" required value="{{ project.name }}">
+            <label for="edit-project-form-desc">Description</label>
+            <textarea id="edit-project-form-desc" name="description" class="form-input" rows="3">{{ project.description }}</textarea>
+            <div class="project-form-error" role="alert" hidden></div>
+            <div class="project-form-actions">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="button" class="btn" data-cancel>Cancel</button>
+            </div>
+        </form>
+    </section>
+
+    <nav class="project-tabs" role="tablist">
+        {% for key, label in [("overview", "Overview"), ("task", "Tasks"), ("document", "Documents"),
+                              ("knowledge", "Knowledge"), ("cron", "Cron"), ("agents", "Agents")] %}
+        <button class="project-tab" role="tab" data-tab="{{ key }}">{{ label }}
+            {% if key in project.counts %}<span class="project-tab-count">{{ project.counts[key] }}</span>{% endif %}
+            {% if key == "agents" %}<span class="project-tab-count">{{ project.agents | length }}</span>{% endif %}
+        </button>
+        {% endfor %}
+    </nav>
+
+    <section class="panel project-panel" id="project-panel">
+        <div class="placeholder">Loading...</div>
+    </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/project_form.js') }}"></script>
+<script src="{{ url_for('static', filename='js/project_detail.js') }}"></script>
+{% endblock %}

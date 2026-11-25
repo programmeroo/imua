@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# Imua post-receive hook — auto-deploys pushes to the project worktree.
+#
+# This hook is installed into the bare repo at:
+#   data/repos/project.git/hooks/post-receive
+#
+# It calls into the Python service module so the deploy logic stays
+# in one place (app.services.git_repo.deploy). Keeping the bash stub
+# thin means tests and the hook can't drift.
+
+set -euo pipefail
+
+# Resolve repo root (the parent dir containing this hooks/ dir)
+GIT_DIR="$(git rev-parse --git-dir)"
+BARE_REPO="$(cd "$GIT_DIR/.." && pwd)"
+
+# Imua app root: two levels up from the bare repo
+#   data/repos/project.git/hooks/post-receive
+#   data/repos/                  <- BARE_REPO
+#   data/                        <- parent
+#   <repo root>                  <- grandparent
+APP_ROOT="$(cd "$BARE_REPO/../.." && pwd)"
+
+cd "$APP_ROOT"
+
+# Use the same Python the dev server uses. flaskenv sets FLASK_APP=app.server,
+# so `flask` is the right entry point. Fall back to `python -m` if flask
+# isn't on PATH (e.g., venv activated only in this shell).
+if command -v flask >/dev/null 2>&1; then
+    FLASK_CMD="flask"
+else
+    FLASK_CMD="python -m flask"
+fi
+
+# Trigger deploy via a tiny CLI shim. We call the service directly
+# (not via the HTTP endpoint) to avoid auth and HTTP overhead for
+# the in-process hook.
+PYTHONPATH="$APP_ROOT" python -c "
+from pathlib import Path
+from app.services.git_repo import deploy, repo_paths
+
+data_dir = Path('$APP_ROOT') / 'data'
+bare, worktree = repo_paths(data_dir)
+deploy(bare, worktree)
+print(f'[imua] deployed {bare} -> {worktree}')
+" 1>&2
+
+exit 0

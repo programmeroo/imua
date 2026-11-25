@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title | default('Imua') }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% if current_admin %}<meta name="csrf-token" content="{{ csrf_token() }}">
+    <script>
+    // Attach the CSRF token to this page's own write requests (task 5.5).
+    (function () {
+        var token = document.querySelector('meta[name="csrf-token"]').content;
+        var send = window.fetch;
+        window.fetch = function (url, opts) {
+            opts = opts || {};
+            var method = (opts.method || 'GET').toUpperCase();
+            var sameSite = new URL(url, location.href).origin === location.origin;
+            if (sameSite && method !== 'GET' && method !== 'HEAD') {
+                opts.headers = new Headers(opts.headers || {});
+                opts.headers.set('X-CSRF-Token', token);
+            }
+            return send.call(this, url, opts);
+        };
+    })();
+    </script>{% endif %}
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div id="app">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="logo"><span class="logo-star">&#x2B50;</span> Imua</h1>
+                <span class="version">v{{ version }}</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="/" class="nav-item {% if request.path == '/' %}active{% endif %}">
+                    <span class="nav-icon">&#x2302;</span> Dashboard
+                </a>
+                <a href="/projects" class="nav-item {% if request.path.startswith('/projects') %}active{% endif %}">
+                    <span class="nav-icon">&#x1F4C1;</span> Projects
+                </a>
+                <a href="/agents" class="nav-item {% if request.path.startswith('/agents') %}active{% endif %}">
+                    <span class="nav-icon">&#x1F465;</span> Agents
+                </a>
+                <a href="/messages" class="nav-item {% if request.path.startswith('/messages') %}active{% endif %}">
+                    <span class="nav-icon">&#x1F4AC;</span> Messages
+                </a>
+                <a href="/tasks" class="nav-item {% if request.path.startswith('/tasks') %}active{% endif %}">
+                    <span class="nav-icon">&#x1F9F0;</span> Tasks
+                </a>
+                <a href="/documents" class="nav-item {% if request.path.startswith('/documents') %}active{% endif %}">
+                    <span class="nav-icon">&#x1F4C4;</span> Documents
+                </a>
+                <a href="/knowledge" class="nav-item {% if request.path.startswith('/knowledge') %}active{% endif %}">
+                    <span class="nav-icon">&#x1F4DA;</span> Knowledge
+                </a>
+                <a href="/cron" class="nav-item {% if request.path.startswith('/cron') %}active{% endif %}">
+                    <span class="nav-icon">&#x23F0;</span> Cron
+                </a>
+                <a href="/issues" class="nav-item {% if request.path.startswith('/issues') %}active{% endif %}">
+                    <span class="nav-icon">&#x26A0;</span> Issues
+                </a>
+                <a href="/settings" class="nav-item {% if request.path.startswith('/settings') %}active{% endif %}">
+                    <span class="nav-icon">&#x2699;</span> Settings
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <span class="status-dot"></span>
+                <span class="status-text">System Online</span>
+                <div class="sidebar-admin">
+                    {% if current_admin %}
+                    <span title="Signed in">{{ current_admin.username }}</span>
+                    <form method="post" action="/logout"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="btn btn-sm">Sign out</button></form>
+                    {% endif %}
+                </div>
+            </div>
+        </aside>
+        <main class="content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

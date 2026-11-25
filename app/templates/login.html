@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body class="login-body">
+    <main class="login-card">
+        <div class="login-accent"></div>
+        <h1 class="logo"><span class="logo-star">&#x2B50;</span> Imua</h1>
+        <p class="login-subtitle">Sign in to the hub</p>
+        {% if no_admins %}<div class="login-error" role="status">No admin account yet. On the hub's machine run
+            <code>python scripts/create_admin.py --username &lt;you&gt;</code>
+            (Docker: <code>docker exec -it imua python scripts/create_admin.py --username &lt;you&gt;</code>).</div>{% endif %}
+        {% if error %}<div class="login-error" role="alert">{{ error }}</div>{% endif %}
+        <form method="post" action="/login" class="login-form">
+            <input type="hidden" name="next" value="{{ next }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label for="username">Username</label>
+            <input id="username" name="username" class="form-input" value="{{ username }}"
+                   autocomplete="username" autocapitalize="none" required {% if not username %}autofocus{% endif %}>
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" class="form-input"
+                   autocomplete="current-password" required {% if username %}autofocus{% endif %}>
+            <button type="submit" class="btn btn-primary">Sign in</button>
+        </form>
+        <p class="login-hint">Forgot your password? On the hub's machine run
+            <code>python scripts/create_admin.py --username &lt;you&gt; --reset</code></p>
+    </main>
+</body>
+</html>

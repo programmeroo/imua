@@ -1,0 +1,26 @@
+# Imua — Docker Compose
+# For deployment/selling. Local dev: use venv + flask run (see README).
+
+services:
+  imua:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: imua
+    ports:
+      - "47280:47280"
+    volumes:
+      - imua_data:/app/data
+      - ./config/config.yaml:/app/config/config.yaml:ro
+    environment:
+      - TZ=UTC
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:47280/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  imua_data:

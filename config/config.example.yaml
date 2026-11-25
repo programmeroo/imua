@@ -1,0 +1,33 @@
+# Imua configuration
+# Copy this to config/config.yaml and edit for your environment.
+# Environment variables override config values when set (e.g. IMUA_SECRETS_KEY).
+
+app:
+  name: "Imua"
+  version: "2.0.0"
+  debug: true
+  host: "0.0.0.0"
+  port: 47280
+  secret_key: "CHANGE_ME_TO_A_RANDOM_STRING"  # signs admin sessions; leave as-is to auto-generate session.key next to the DB
+  vault_key: ""  # Leave empty: auto-generated once, saved as vault.key next to the DB
+  operator_key: ""  # the operator's direct-access credential for vault store/retrieve; leave empty to disable
+
+auth:
+  operator_key_enabled: true  # false: the operator key is refused everywhere (admins sign in instead)
+
+database:
+  path: "data/database/imua.db"
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+
+websocket:
+  ping_interval: 25
+  ping_timeout: 10
+
+agents:
+  heartbeat_timeout: 120  # seconds before marking agent offline
+
+tasks:
+  max_concurrent: 10

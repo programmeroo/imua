@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+venv/
+.venv/
+*.so
+
+# Environment
+.env
+.env.local
+*.key
+
+# Real config (copy from config.example.yaml)
+config/config.yaml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Runtime data
+data/database/
+data/repos/
+data/docs/
+data/chromadb/
+data/chroma/
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+
+# Pytest
+.pytest_cache/
+
+# Flask
+instance/
+
+# Editor
+*.orig
+
+# Docker
+.docker/
+
+# Git worktrees (local dev isolation)
+.worktrees/
+
+# Local agent credentials (never commit — see AGENTS.md agent codes)
+.imua_*_token
+
+# Private local notes: real LAN addresses, archived business plans (never commit)
+private/

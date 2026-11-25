@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="cron-detail-page" data-job-id="{{ job_id }}">
+    <header class="page-header">
+        <div class="page-header-left">
+            <a href="/cron" class="back-link">&#x2190; Back to Cron Jobs</a>
+            <h2 id="job-name">Loading...</h2>
+            <span class="subtitle" id="job-description"></span>
+        </div>
+        <div class="page-header-right" id="detail-controls">
+            <button class="btn btn-outline" id="btn-run-now">&#x25B6; Run Now</button>
+            <button class="btn btn-outline" id="btn-toggle-pause">&#x23F8; Pause</button>
+            <button class="btn btn-danger" id="btn-delete">&#x1F5D1; Delete</button>
+        </div>
+    </header>
+
+    <div class="detail-grid">
+        <section class="panel detail-info">
+            <div class="panel-header">
+                <h3>Job Information</h3>
+            </div>
+            <div id="job-info-body">
+                <div class="detail-loading">Loading...</div>
+            </div>
+        </section>
+
+        <section class="panel detail-agent">
+            <div class="panel-header">
+                <h3>Assigned Agent</h3>
+            </div>
+            <div id="job-agent-body">
+                <div class="detail-loading">Loading...</div>
+            </div>
+        </section>
+    </div>
+
+    <section class="panel" style="margin-top:16px;">
+        <div class="panel-header">
+            <h3>Execution History</h3>
+            <span class="panel-badge" id="history-count">0 runs</span>
+        </div>
+        <div class="table-wrapper">
+            <table class="data-table" id="history-table">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Status</th>
+                        <th>Duration</th>
+                        <th>Trigger</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="history-body">
+                    <tr>
+                        <td colspan="5" class="placeholder" style="text-align:center;padding:24px">Loading history...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/cron_detail.js') }}"></script>
+{% endblock %}

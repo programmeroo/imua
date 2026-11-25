@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="tasks-page">
+    <header class="page-header">
+        <div class="page-header-left">
+            <h2>Tasks</h2>
+            <span class="subtitle">Task Queue — Priority Job Management</span>
+        </div>
+        <div class="page-header-right">
+            <span class="badge">&#x25CF; Live</span>
+        </div>
+    </header>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-top">
+                <span class="stat-icon">&#x23F3;</span>
+            </div>
+            <span class="stat-value" id="stat-pending">0</span>
+            <span class="stat-label">Pending</span>
+        </div>
+        <div class="stat-card">
+            <div class="stat-top">
+                <span class="stat-icon">&#x1F504;</span>
+            </div>
+            <span class="stat-value" id="stat-in-progress">0</span>
+            <span class="stat-label">In Progress</span>
+        </div>
+        <div class="stat-card">
+            <div class="stat-top">
+                <span class="stat-icon">&#x2705;</span>
+            </div>
+            <span class="stat-value" id="stat-completed">0</span>
+            <span class="stat-label">Completed</span>
+        </div>
+        <div class="stat-card">
+            <div class="stat-top">
+                <span class="stat-icon">&#x274C;</span>
+            </div>
+            <span class="stat-value" id="stat-failed">0</span>
+            <span class="stat-label">Failed</span>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h3>Task Queue</h3>
+            <div class="panel-actions">
+                <select id="status-filter" class="filter-input" style="width:auto;padding:4px 8px;font-size:12px;">
+                    <option value="">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                    <option value="failed">Failed</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
+        </div>
+        <div class="msg-actions">
+            <span class="msg-actions-spacer"></span>
+            <label for="task-prune-before">Delete finished tasks older than</label>
+            <input type="date" id="task-prune-before" class="filter-input">
+            <button class="btn btn-sm btn-danger" id="btn-task-prune">Delete</button>
+        </div>
+        <div class="table-wrapper">
+            <table class="data-table" id="tasks-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Type</th>
+                        <th>Title</th>
+                        <th>Priority</th>
+                        <th>Assigned To</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tasks-body">
+                    <tr>
+                        <td colspan="8" class="placeholder" style="text-align:center;padding:24px">Loading tasks...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Task Detail Modal -->
+<div id="task-detail-modal" class="modal hidden">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Task Detail</h3>
+            <button class="modal-close" id="task-modal-close">&times;</button>
+        </div>
+        <div class="modal-body" id="task-detail-body">
+            <div class="detail-loading">Loading...</div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/tasks.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="settings-page">
+    <header class="page-header">
+        <div class="page-header-left">
+            <h2>Settings</h2>
+            <span class="subtitle">System Configuration & Preferences</span>
+        </div>
+        <div class="page-header-right">
+            <span class="badge">&#x2699; Configuration</span>
+        </div>
+    </header>
+
+    <div class="settings-grid">
+        <section class="panel">
+            <div class="panel-header">
+                <h3>System Information</h3>
+                <span class="panel-badge">Read-only</span>
+            </div>
+            <div class="settings-fields" id="system-info">
+                <div class="detail-loading">Loading system info...</div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-header">
+                <h3>Vault Management</h3>
+                <span class="panel-badge">Secrets</span>
+            </div>
+            <div class="settings-fields" id="vault-info">
+                <div class="detail-loading">Loading vault...</div>
+            </div>
+        </section>
+    </div>
+
+    <section class="panel" style="margin-top:16px;">
+        <div class="panel-header">
+            <h3>Preferences</h3>
+            <span class="panel-badge">Display</span>
+        </div>
+        <div class="settings-fields" id="preferences-panel">
+            <div class="setting-row">
+                <div class="setting-label">
+                    <span class="setting-name">Theme</span>
+                    <span class="setting-desc">Color scheme for the dashboard</span>
+                </div>
+                <div class="setting-control">
+                    <select id="pref-theme" class="filter-input" style="width:auto;">
+                        <option value="light">Light (Default)</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+            </div>
+            <div class="setting-row">
+                <div class="setting-label">
+                    <span class="setting-name">Auto-refresh</span>
+                    <span class="setting-desc">Automatically refresh dashboard data</span>
+                </div>
+                <div class="setting-control">
+                    <label class="toggle">
+                        <input type="checkbox" id="pref-autorefresh" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="setting-row">
+                <div class="setting-label">
+                    <span class="setting-name">Refresh Interval</span>
+                    <span class="setting-desc">How often to refresh data (seconds)</span>
+                </div>
+                <div class="setting-control">
+                    <select id="pref-interval" class="filter-input" style="width:auto;">
+                        <option value="15">15s</option>
+                        <option value="30">30s</option>
+                        <option value="60">60s</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="panel" style="margin-top:16px;" id="audit-panel">
+        <div class="panel-header">
+            <h3>Audit Log</h3>
+            <span class="panel-badge">Admin actions &amp; sign-ins</span>
+        </div>
+        <div class="audit-toolbar">
+            <input id="audit-actor" class="filter-input" placeholder="Filter by who (e.g. admin, operator)">
+            <button class="btn btn-sm" id="audit-refresh">Refresh</button>
+        </div>
+        <div id="audit-table" class="table-wrapper"><div class="placeholder">Loading...</div></div>
+        <button class="btn btn-sm" id="audit-more" hidden>Load older</button>
+    </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+<script src="{{ url_for('static', filename='js/audit.js') }}"></script>
+{% endblock %}
